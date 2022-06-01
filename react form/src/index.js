@@ -8,7 +8,7 @@ const user = {
 	password: 'Taras123',
 	phones: [
 		{number: '651122', type: 'home'},
-		{number: '651122', type: 'home'},
+		{number: '651d122', type: 'home'},
 		{number: '0123456789', type: 'mobile'},
 		{number: '380123456789', type: 'mobile'},
 	],
