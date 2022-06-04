@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react';
 import styled, { ThemeProvider } from 'styled-components';
+import UserStatus from './UserStatus';
 
 
 
@@ -52,41 +53,43 @@ export default class UserForm extends PureComponent {
     
 render (){
     return (
-    <div className="container p-5">
-        <form id="user-form">
-            <div className="form-group">
-                <label>П.І.Б.</label>
-                <input type="text" name="full_name" className="form-control" value={this.state.name} onChange={this.handleChange}/>
-                <small className="form-text text-muted">Обовʼязково прізвище, імʼя та по батькові. Тільки літерами українскього алфавіту</small>
-            </div>
-            <div className="form-group">
-                <label>Email</label>
-                <input type="text" name="email" className="form-control" defaultValue={this.state.email}/>
-                <small className="form-text text-muted">Адреса електронної пошти</small>
-            </div>
-            <div className="form-group">
-                <label>Пароль</label>
-                <input type="password" name="password" className="form-control" defaultValue={this.state.password}/>
-                <small className="form-text text-muted">Мінімум 8 літер. Обовʼязково повинні бути великі та малі літери англійського алфавіту та числа</small>
-            </div>
-            {this.state.phones.map((phone, index) => (
-                <div className="input-group mb-3">
-                    <Input inputColor={this.state.colors[index]} type="text" className="form-control" value={ phone.number } onChange={(event) => this.onChangeNumber(event, index) }/>
-                    <select value={phone.type} className="custom-select" onChange={(event) => this.onChangeType(event, index) }>
-                        <option value="home">Домашній</option>
-                        <option value="mobile">Мобільний</option>
-                    </select>
-                    <div className="input-group-append">
-                        <button className="btn btn-outline-secondary" type="button" onClick={(e) => this.delNumber(index)}>Видалити</button>
-                    </div>
+        
+        <div className="container p-5">
+            <UserStatus />
+            <form id="user-form">
+                <div className="form-group">
+                    <label>П.І.Б.</label>
+                    <input type="text" name="full_name" className="form-control" value={this.state.name} onChange={this.handleChange}/>
+                    <small className="form-text text-muted">Обовʼязково прізвище, імʼя та по батькові. Тільки літерами українскього алфавіту</small>
                 </div>
-            ) )}
-            
-            <button type="button" className="btn btn-primary" onClick={this.addNewPhone}>Add phone number</button>
+                <div className="form-group">
+                    <label>Email</label>
+                    <input type="text" name="email" className="form-control" defaultValue={this.state.email}/>
+                    <small className="form-text text-muted">Адреса електронної пошти</small>
+                </div>
+                <div className="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" className="form-control" defaultValue={this.state.password}/>
+                    <small className="form-text text-muted">Мінімум 8 літер. Обовʼязково повинні бути великі та малі літери англійського алфавіту та числа</small>
+                </div>
+                {this.state.phones.map((phone, index) => (
+                    <div className="input-group mb-3">
+                        <Input inputColor={this.state.colors[index]} type="text" className="form-control" value={ phone.number } onChange={(event) => this.onChangeNumber(event, index) }/>
+                        <select value={phone.type} className="custom-select" onChange={(event) => this.onChangeType(event, index) }>
+                            <option value="home">Домашній</option>
+                            <option value="mobile">Мобільний</option>
+                        </select>
+                        <div className="input-group-append">
+                            <button className="btn btn-outline-secondary" type="button" onClick={(e) => this.delNumber(index)}>Видалити</button>
+                        </div>
+                    </div>
+                ) )}
+                
+                <button type="button" className="btn btn-primary" onClick={this.addNewPhone}>Add phone number</button>
 
-            <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Submit</button>
-        </form>
-    </div>
+                <button type="submit" className="btn btn-primary" onClick={this.handleSubmit}>Submit</button>
+            </form>
+        </div>
     )
 }
 }
