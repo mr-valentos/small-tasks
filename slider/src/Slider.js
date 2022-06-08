@@ -6,14 +6,53 @@ export default class Slider extends React.PureComponent {
 		min: this.props.min,
 		max: this.props.max,
 		value: this.props.value,
-		onchange: this.props.onchange,
+		onChange: this.props.onchange,
 		x: 0,
+		line: 0,
 	}
+
+	changeValue = this.changeValue.bind(this);
 
 	startX = 0;
 	
-	rootRef = React.createRef()
+	rootRef = React.createRef();
 
+	
+	componentDidMount(){
+		this.changeValue()
+	}
+
+	changeValue(event) {
+		let min = this.state.min;
+		let max = this.state.max;
+		let value = this.state.value;;
+		if (event){
+			value = event.target.value;
+		}
+
+		this.rootPosition = this.rootRef.current.getBoundingClientRect();
+
+		let width = this.rootPosition.width - 10;
+		let proc = (value - min)/(max - min) * 100;
+		let xValue = (width) * proc / 100
+
+		if (xValue < 0){
+			xValue = 0;
+			
+		} 
+		if (xValue > width){
+			xValue = width;
+		}
+
+		this.setState({
+			x: xValue,
+			value: value,
+			line: xValue,
+		})
+		
+		this.startX = xValue;
+	}
+		
 	onDragStart = (e) => {
 		this.firstX = this.state.x;
 		this.rootPosition = this.rootRef.current.getBoundingClientRect();
@@ -23,17 +62,29 @@ export default class Slider extends React.PureComponent {
 	}
 
 	onDrag = (e) => {
+		let width = this.rootPosition.width - 10;
+		let value = this.state.value;
+
 		let x = this.firstX + (e.clientX - this.rootPosition.left) - this.startX;
+		let proc = (x / width) * 100;
+		value = Math.trunc(((this.state.max - this.state.min) * proc / 100) + this.state.min)
+
 		if (x < 0){
 			x = 0;
+			value = this.state.min;
 		} 
-		if (x > this.rootPosition.width - 10){
-			x = this.rootPosition.width - 10;
+		if (x > width){
+			x = width;
+			value = this.state.max;
 		}
 		this.setState({
 			x: x,
+			value: value,
+			line: x,
 		})
 	}
+
+	
 
 	onDragEnd = (e) => {
 		this.startX = this.state.x
@@ -42,13 +93,16 @@ export default class Slider extends React.PureComponent {
 	}
 
 	render() {
-		let {x} = this.state
+		let {x, line} = this.state
 		return (
 			<Root>
-				<input/>
-
+				<input value={this.state.value} onChange={this.changeValue}/>
+				
 				<Bar ref={this.rootRef}>
-					<Handler
+					<Line 
+						width={line}
+					/>
+					<Handler				
 						x={x}
 						onMouseDown={this.onDragStart}
 					/>
@@ -86,4 +140,15 @@ const Handler = styled.div.attrs(props => ({
 	
 `;
 
+const Line = styled.div.attrs(props => ({
+	style: {
+		width: props.width
+	}
+}))`
+    position: absolute;
+	height: 2px;
+	background-color: red;
+	box-shadow: 0px 0px 3px red;
+	
+`;
 //endregion
