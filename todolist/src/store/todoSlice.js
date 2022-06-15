@@ -14,20 +14,22 @@ const taskSlice = createSlice({
     },
     reducers: {
       addTask: (state, action) => {
-        // Redux Toolkit allows us to write "mutating" logic in reducers. It
-        // doesn't actually mutate the state because it uses the Immer library,
-        // which detects changes to a "draft state" and produces a brand new
-        // immutable state based off those changes
         state.todos.push({
           text: action.payload.text,
           complited: false,
         })
       },
-    //   delete: state => {
-    //     state.todos.filter()
-    //   }
+      deleteTask: (state, action) => {
+        state.todos = state.todos.filter((p, i) => i !== action.payload.index)
+      },
+      changeStatus: (state, action) => {
+        state.todos = state.todos.map((p, i) => (i === action.payload.index) ? { ...p, complited: !p.complited }: p)
+      },
+      changeStatusOfAll: (state, action) => {
+        state.todos = state.todos.map((p) => ({text: p.text, complited: action.payload.status}))
+      },
     }
   })
 
   export default taskSlice.reducer
-  export const {addTask} = taskSlice.actions
+  export const {addTask, deleteTask, changeStatus, changeStatusOfAll} = taskSlice.actions
