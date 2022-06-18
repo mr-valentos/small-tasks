@@ -51,9 +51,13 @@ const taskSlice = createSlice({
       },
       all: state => {
         state.sort.sortOn = false
+      },
+      // Editing
+      editTask: (state, action) => {
+        state.todos = state.todos.map(p => (p.id === action.payload.id) ? { ...p, text: action.payload.text}: p)
       }
     }
   })
 
   export default taskSlice.reducer
-  export const {addTask, deleteTask, changeStatus, changeStatusOfAll, deleteCompleted, active, completed, all} = taskSlice.actions
+  export const {addTask, deleteTask, changeStatus, changeStatusOfAll, deleteCompleted, active, completed, all, editTask} = taskSlice.actions

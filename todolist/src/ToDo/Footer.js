@@ -13,6 +13,7 @@ export default function Footer () {
     const sortAll = () => dispatch(all())
 
     let counter = todos.filter(p => p.complited === false).length;
+    let counterOfCompleted = todos.filter(p => p.complited === true).length;
     
     let firstBtn, secondBtn, thirdBtn;
     if (sort.sortOn){
@@ -26,24 +27,24 @@ export default function Footer () {
         firstBtn = "selected"
     }
 
-    return (
-        <footer className="footer">
-        {/* <!-- This should be `0 items left` by default --> */}
-        <span className="todo-count"><strong>{counter}</strong> item left</span>
-        {/* <!-- Remove this if you don't implement routing --> */}
-        <ul className="filters">
-            <li>
-                <a className={firstBtn} href="#/" onClick={sortAll}>All</a>
-            </li>
-            <li>
-                <a className={secondBtn} href="#/active" onClick={sortActive}>Active</a>
-            </li>
-            <li>
-                <a className={thirdBtn} href="#/completed" onClick={sortCompleted}>Completed</a>
-            </li>
-        </ul>
-        {/* <!-- Hidden if no completed items are left ↓ --> */}
-        <button  className="clear-completed" onClick={delCompleted}>Clear completed</button>
-        </footer>
-    )
+    if (todos.length !== 0){
+        return (
+            <footer className="footer">
+            <span className="todo-count"><strong>{counter}</strong> item left</span>
+            <ul className="filters">
+                <li>
+                    <a className={firstBtn} href="#/" onClick={sortAll}>All</a>
+                </li>
+                <li>
+                    <a className={secondBtn} href="#/active" onClick={sortActive}>Active</a>
+                </li>
+                <li>
+                    <a className={thirdBtn} href="#/completed" onClick={sortCompleted}>Completed</a>
+                </li>
+            </ul>
+            {/* <!-- Hidden if no completed items are left ↓ --> */}
+            <>{(counterOfCompleted !== 0) ? <button  className="clear-completed" onClick={delCompleted}>Clear completed</button> : <></>}</>
+            </footer>
+        )
+    }
 }

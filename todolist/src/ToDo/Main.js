@@ -1,6 +1,6 @@
-import React, {PureComponent} from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTask, changeStatus, changeStatusOfAll } from "../store/todoSlice";
+import { deleteTask, changeStatus, changeStatusOfAll, editTask } from "../store/todoSlice";
 
 let status = true;
 export default function Main() {
@@ -31,7 +31,7 @@ export default function Main() {
             <label htmlFor="toggle-all" onClick={completeAll}>Mark all as complete</label>
             <ul className="todo-list">
                 {todosFilter.map((todo, index) => (
-                   <Task
+                   <Task key={todo.id}
                    todo={todo}
                    index={index}
                    id={todo.id}
@@ -44,14 +44,25 @@ export default function Main() {
 }
 
 function Task(todo) {
+    const [editing, setEdit] = useState('')
     const dispatch = useDispatch();
     let id = todo.id;
     const remove = () => dispatch(deleteTask({id}))
     const onComplete = () => dispatch(changeStatus({id}))
 
+    const edit = (e) => {
+        let text = e.target.value;
+            dispatch(editTask({id, text}));
+    }
+
+    const editCancel = (e) => {
+        if (e.key === 'Enter'){
+            setEdit('')
+        }
+    }
+
     let status;
     let cheked;
-    let editing;
 
     if (todo.todo.complited){
         status = 'completed'
@@ -62,13 +73,13 @@ function Task(todo) {
     }
 
     return (
-        <li  className={status +' '+ editing} >
+        <li className={status +' '+ editing} >
             <div className="view">
                 <input className="toggle" type="checkbox" checked={cheked} onChange={onComplete}/>
-                <label>{todo.todo.text}</label>
+                <label onDoubleClick={() => setEdit('editing')}>{todo.todo.text}</label>
                 <button className="destroy" onClick={remove}></button>
             </div>
-            <input className="edit" defaultValue={todo.todo.text} />
+            <input className="edit" value={todo.todo.text} onChange={edit} onKeyDown={editCancel}/>
         </li>
     )
 }
