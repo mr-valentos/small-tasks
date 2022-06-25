@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { deleteTask, changeStatus, changeStatusOfAll, editTask } from "../store/todoSlice";
 
 let status = true;
-export default function Main() {
-    const todos = useSelector(state => state.todos.todos);
+export default function Main(test) {
+    let params = useParams();
+    let todosFilter = test.todos;
     const sort = useSelector(state => state.todos.sort);
     const dispatch = useDispatch();
 
@@ -12,17 +14,9 @@ export default function Main() {
         dispatch(changeStatusOfAll({status}))
         status = !status
     }
-
-    let todosFilter;
-    if (sort.sortOn) {
-        if (sort.active){
-            todosFilter = todos.filter(p => p.complited === false)
-        } 
-        if (!sort.active){
-            todosFilter = todos.filter(p => p.complited === true)
-        } 
-    } else {
-        todosFilter = todos;
+    
+    if (params.id) {
+        todosFilter = todosFilter.filter(p => p.id == params.id)
     }
 
     return (
@@ -36,8 +30,7 @@ export default function Main() {
                    index={index}
                    id={todo.id}
                    />
-                ))}
-                
+                ))}     
             </ul>
         </section>
     )

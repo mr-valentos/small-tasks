@@ -1,6 +1,7 @@
 import React, {PureComponent} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCompleted, active, completed, all } from "../store/todoSlice";
+import { Link } from "react-router-dom";
 
 export default function Footer () {
     const todos = useSelector(state => state.todos.todos);
@@ -33,13 +34,13 @@ export default function Footer () {
             <span className="todo-count"><strong>{counter}</strong> item left</span>
             <ul className="filters">
                 <li>
-                    <a className={firstBtn} href="#/" onClick={sortAll}>All</a>
+                    <Link className={firstBtn} to="/" onClick={sortAll}>All</Link>
                 </li>
                 <li>
-                    <a className={secondBtn} href="#/active" onClick={sortActive}>Active</a>
+                    <Link className={secondBtn} to="/active" onClick={sortActive}>Active</Link>
                 </li>
                 <li>
-                    <a className={thirdBtn} href="#/completed" onClick={sortCompleted}>Completed</a>
+                    <Link className={thirdBtn} to="/completed" onClick={sortCompleted}>Completed</Link>
                 </li>
             </ul>
             {/* <!-- Hidden if no completed items are left ↓ --> */}
