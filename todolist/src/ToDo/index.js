@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from './Header'
 import Main from './Main'
 import Footer from "./footer";
-import Test from "./test";
-import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
+import { Route, Routes, Outlet } from "react-router-dom";
 
 function ToDo2 () {
     
