@@ -51,7 +51,8 @@ function Task(todo) {
         .then(res => res.json())
         .then(list => console.log(list))
         .catch(err => console.error(err))
-    },[])
+        return () => (fetch('http://localhost:3001/',{method: 'POST',headers: {'Content-Type': 'application/json'}, body: JSON.stringify(postTodos)}))
+    },[postTodos])
    
 
     const edit = (e) => {
