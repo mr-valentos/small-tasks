@@ -1,6 +1,7 @@
 // module.exports.hello = 'Hello World!';
 const { rejects } = require('assert');
 const fs = require('fs/promises');
+const fsSync = require('fs');
 const {resolve} = require('path');
 const {promisify} = require('util');
 
@@ -17,7 +18,7 @@ const {promisify} = require('util');
 //     })
 
 module.exports.todolistF = function() {
-    return fs.readFile(resolve(__dirname, 'test.json'))
+    return fs.readFile(resolve(__dirname, 'todolist.json'))
     .then(function(data){
         return data.toString();
     })
@@ -28,8 +29,10 @@ module.exports.todolistF = function() {
 
 
 function writeTodosP(newTodoList) {
+    fsSync.rmSync(resolve(__dirname, 'todolist.json'))
     return new Promise((res, rej) => {
-        fs.writeFile(resolve(__dirname, 'test.json'), JSON.stringify(newTodoList))
+        fsSync.writeFileSync(resolve(__dirname, 'todolist.json'), '')
+        fs.writeFile(resolve(__dirname, 'todolist.json'), JSON.stringify(newTodoList))
         .then(res(console.log('success'))) 
         .catch(function(err){
             rej(console.error(err))   
