@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { deleteTask, changeStatus, changeStatusOfAll, editTask } from "../store/todoSlice";
 
+import {socket} from "./Header"
+
 
 let status = true;
 export default function Main(test) {
@@ -13,9 +15,19 @@ export default function Main(test) {
     
 
     const completeAll = () => {
-        dispatch(changeStatusOfAll({status}))
+        socket.emit('changeStatusOfAll', status)
         status = !status
     }
+    const removeTask = (id) => socket.emit('deleteTask', id)
+    const onComplete = (id) => socket.emit('changeStatus', id);
+
+
+    useEffect(() => {
+        socket.on('changeStatusOfAll', status => dispatch(changeStatusOfAll({status})))
+        socket.on('deleteTask', id => dispatch(deleteTask({id})))
+        socket.on('changeStatus', id => dispatch(changeStatus({id})))
+        socket.on('editTask', ({id, text}) => dispatch(editTask({id, text})))
+    },[socket]) 
 
     if (params.id) {
         todosFilter = todosFilter.filter(p => p.id == params.id)
@@ -31,6 +43,8 @@ export default function Main(test) {
                    todo={todo}
                    index={index}
                    id={todo.id}
+                   remove={()=>removeTask(todo.id)}
+                   onComplete={()=>onComplete(todo.id)}              
                    />
                 ))}     
             </ul>
@@ -43,23 +57,24 @@ function Task(todo) {
     const [editing, setEdit] = useState('')
     const dispatch = useDispatch();
     let id = todo.id;
-    const remove = () => dispatch(deleteTask({id}))
-    const onComplete = () => dispatch(changeStatus({id}))
-    
+    const remove = todo.remove
+    const onComplete = todo.onComplete
 
-    const postTodos = useSelector(state => state.todos.todos);
-    useEffect(() => {
 
-        fetch('http://localhost:3001/',{method: 'POST',headers: {'Content-Type': 'application/json'}, body: JSON.stringify(postTodos)})
-        .then(res => res.json())
-        .then(list => console.log(list))
-        .catch(err => console.error(err))
-        return () => (fetch('http://localhost:3001/',{method: 'POST',headers: {'Content-Type': 'application/json'}, body: JSON.stringify(postTodos)}))
-    },[postTodos])
+    // const postTodos = useSelector(state => state.todos.todos);
+    // const ajax = () => fetch('http://localhost:3001/',{method: 'POST',headers: {'Content-Type': 'application/json'}, body: JSON.stringify(postTodos)})
+    // useEffect(() => {
+    //     ajax()
+    //     .then(res => res.json())
+    //     .then(list => console.log(list))
+    //     .catch(err => console.error(err))
+    //     return () => ajax()
+    // },[postTodos])
 
     const edit = (e) => {
         let text = e.target.value;
-        dispatch(editTask({id, text}));
+        socket.emit('editTask', {id, text})
+        // dispatch(editTask({id, text}));
     }
 
     const editCancel = (e) => {

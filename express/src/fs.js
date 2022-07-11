@@ -32,6 +32,7 @@ function writeTodosP(newTodoList) {
     fsSync.rmSync(resolve(__dirname, 'todolist.json'));
     
     return new Promise((res, rej) => {
+        fsSync.writeFileSync(resolve(__dirname, 'todolist.json'), '')
         fs.writeFile(resolve(__dirname, 'todolist.json'), JSON.stringify(newTodoList))
         .then(res(console.log('success'))) 
         .catch(function(err){

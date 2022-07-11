@@ -31,9 +31,12 @@ app.get('/', function(req, res,){
 io.on('connection', (socket) => {
   console.log('conected');
 
-  socket.on('massage', data => {
-    io.emit('recive', data)
-  })
+  socket.on('newTodo', ({text, id}) => io.emit('newTodo', {text, id}))
+  socket.on('changeStatusOfAll', data => io.emit('changeStatusOfAll', data))
+  socket.on('deleteTask', data => io.emit('deleteTask', data))
+  socket.on('changeStatus', data => io.emit('changeStatus', data))
+  socket.on('editTask', ({id, text}) => io.emit('editTask', {id, text}))
+  socket.on('delCompleted', data => io.emit('delCompleted', data))
 });
 
 server.listen(port, () => {

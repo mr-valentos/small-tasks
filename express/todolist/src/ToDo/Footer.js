@@ -1,17 +1,23 @@
-import React, {PureComponent} from "react";
+import React, {useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCompleted, active, completed, all } from "../store/todoSlice";
 import { Link } from "react-router-dom";
+import {socket} from "./Header"
 
 export default function Footer () {
     const todos = useSelector(state => state.todos.todos);
     const sort = useSelector(state => state.todos.sort);
     const dispatch = useDispatch();
     
-    const delCompleted = () => dispatch(deleteCompleted());
+    const delCompleted = () => socket.emit('delCompleted', '')
+
     const sortActive = () => dispatch(active())
     const sortCompleted = () => dispatch(completed())
     const sortAll = () => dispatch(all())
+
+    useEffect(()=> {
+        socket.on('delCompleted', () => dispatch(deleteCompleted()))
+    },[socket])
 
     let counter = todos.filter(p => p.complited === false).length;
     let counterOfCompleted = todos.filter(p => p.complited === true).length;

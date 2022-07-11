@@ -11,7 +11,11 @@ function getRandomID(min, max) {
 const taskSlice = createSlice({
     name: 'tasks',
     initialState: {
-      todos: [],
+      todos: [
+        {text: 'hi',
+        complited: false,
+        id: 1}
+      ],
       sort: {
         sortOn: false,
         active: true,
