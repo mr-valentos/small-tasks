@@ -13,13 +13,14 @@ const io = new Server(server, {
 const cors = require('cors');
 const port = 3001;
 const test = require('./src/fs')
+const mongo = require('./mongo/script')
 
 app.use(cors());
 app.use(express.json())
 
 app.post('/', function (req, res) {
   res.json(req.body);
-  test.writeTodos(req.body)
+  mongo.addNewTodo()
 });
 
 app.get('/', function(req, res,){
@@ -31,7 +32,10 @@ app.get('/', function(req, res,){
 io.on('connection', (socket) => {
   console.log('conected');
 
-  socket.on('newTodo', ({text, id}) => io.emit('newTodo', {text, id}))
+  socket.on('newTodo', async ({text, id}) => {
+    const todo = await mongo.addNewTodo({text, id})
+    io.emit('newTodo', todo)
+  })
   socket.on('changeStatusOfAll', data => io.emit('changeStatusOfAll', data))
   socket.on('deleteTask', data => io.emit('deleteTask', data))
   socket.on('changeStatus', data => io.emit('changeStatus', data))

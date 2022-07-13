@@ -26,10 +26,10 @@ export default function Header() {
     
 
     useEffect(() => {
-        socket.on('newTodo', ({text, id}) => {
+        socket.on('newTodo', todo => {
             // let text = data
-            console.log(text)
-            dispatch(addTask({text, id}));
+            console.log(todo)
+            // dispatch(addTask({text, id}));
         })
         
         // fetch('http://localhost:3001/',{method: 'GET'})
