@@ -19,7 +19,7 @@ export default function Main(test) {
         status = !status
     }
     const removeTask = (id) => socket.emit('deleteTask', id)
-    const onComplete = (id) => socket.emit('changeStatus', id);
+    const onComplete = (id, complited) => socket.emit('changeStatus', {id, complited});
 
 
     useEffect(() => {
@@ -44,7 +44,7 @@ export default function Main(test) {
                    index={index}
                    id={todo.id}
                    remove={()=>removeTask(todo.id)}
-                   onComplete={()=>onComplete(todo.id)}              
+                   onComplete={()=>onComplete(todo.id, todo.complited)}              
                    />
                 ))}     
             </ul>
@@ -59,6 +59,7 @@ function Task(todo) {
     let id = todo.id;
     const remove = todo.remove
     const onComplete = todo.onComplete
+    console.log(todo.id)
 
 
     // const postTodos = useSelector(state => state.todos.todos);

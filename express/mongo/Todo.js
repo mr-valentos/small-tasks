@@ -6,7 +6,7 @@ const todoSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    id: String
+    // id: String
 })
 
 module.exports = mongoose.model('Todo', todoSchema)

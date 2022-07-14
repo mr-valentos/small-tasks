@@ -1,12 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-// возвращает уникальный короткий ID в заданном числовом диапазоне
-function getRandomID(min, max) {
-  var int = Math.floor(Math.random() * (max - min + 1)) + min;
-
-  return int.toString(36);
-}
-
 
 const taskSlice = createSlice({
     name: 'tasks',
@@ -27,7 +20,7 @@ const taskSlice = createSlice({
         state.todos.push({
           text: action.payload.text,
           complited: action.payload.complited || false,
-          id: action.payload.id || getRandomID(0, 1000),
+          id: action.payload.id,
         })
       },
       // Main
