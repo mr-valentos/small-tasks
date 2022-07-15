@@ -12,11 +12,11 @@ const io = new Server(server, {
 
 const cors = require('cors');
 const port = 3001;
-const test = require('./src/fs')
-const mongo = require('./mongo/script')
+const test = require('./src/fs');
+const mongo = require('./mongo/script');
 
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
 
 // app.post('/', function (req, res) {
 //   res.json(req.body);
@@ -36,17 +36,31 @@ io.on('connection', async (socket) => {
     const todo = await mongo.addNewTodo(text)
     io.emit('newTodo', todo)
   })
-  socket.on('changeStatusOfAll', data => io.emit('changeStatusOfAll', data))
+
+  socket.on('changeStatusOfAll', async data => {
+    await mongo.completeAll(data)
+    io.emit('changeStatusOfAll', data)
+  })
+  
   socket.on('deleteTask', async data => {
     await mongo.deleteTodo(data)
     io.emit('deleteTask', data)
   })
+
   socket.on('changeStatus', async ({id, complited}) => {
-    await mongo.onComplite(id, complited)
+    await mongo.onComplete(id, complited)
     io.emit('changeStatus', id)
   })
-  socket.on('editTask', ({id, text}) => io.emit('editTask', {id, text}))
-  socket.on('delCompleted', data => io.emit('delCompleted', data))
+
+  socket.on('editTask', async ({id, text}) => {
+    await mongo.editTodo(id, text)
+    io.emit('editTask', {id, text})
+  })
+
+  socket.on('delCompleted', async data => {
+    await mongo.deleteCompleted()
+    io.emit('delCompleted', data)
+  })
 });
 
 server.listen(port, () => {

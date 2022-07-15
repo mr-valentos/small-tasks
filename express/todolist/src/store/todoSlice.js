@@ -4,11 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const taskSlice = createSlice({
     name: 'tasks',
     initialState: {
-      todos: [
-        {text: 'hi',
-        complited: false,
-        id: 1}
-      ],
+      todos: [],
       sort: {
         sortOn: false,
         active: true,
